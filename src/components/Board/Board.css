@@ -1,0 +1,38 @@
+.board {
+  display: flex;
+}
+
+.board-columns {
+	margin: 8px;
+	display: flex;
+	width: 100%;
+	min-height: 80vh;
+}
+
+.board-column {
+	min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  background: #f3f3f3;
+  min-width: 400px;
+  border-radius: 5px;
+  padding: 15px 15px;
+  margin-right: 45px;
+}
+
+.board-column-title {
+  font-weight: bold;
+}
+
+.board-column-external {
+	min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 5px;
+  border: 1px dashed;
+  padding: 15px 15px;
+}
+
+.board-column-external-title {
+  font-style: italic;
+}
