@@ -11,7 +11,6 @@ const MAX_CARS_ON_LOADING = 1;
 
 const Board = () => {
   const [columns, setColumns] = useState({});
-  // const [isLoading, setIsLoading] = useState(false);
 
   async function loadData() {
     const { data } = await axios.get("http://localhost:5000/store/invoices");
@@ -26,78 +25,165 @@ const Board = () => {
   }
 
   useEffect(() => {
-    // setIsLoading(true)
     loadData().then((cols) => setColumns(cols))
-    // setIsLoading(false)
   }, [])
-  // loadData().then((cols) => setColumns(cols))
-  // loadData()
 
-  // const [someData, setSomeData] = useState({});
-  // const componentMounted = useRef(true); // (3) component is mounted
-    // ...
+  useEffect(() => {
+    const interval = setInterval(() => {
+      loadData().then((cols) => setColumns(cols))
+      console.log('Requested data');
+    }, 15000);
+    return () => clearInterval(interval);
+  }, []);
 
-  const onDragEnd = (result) => {
+  const onDragEnd = async (result) => {
     if (!result.destination) return;
     const { source, destination } = result;
     if (source.droppableId !== destination.droppableId) {
       const sourceColumn = columns[source.droppableId];
       const destColumn = columns[destination.droppableId];
+
+      const sourceDroppableId = Number(source.droppableId);
       const destinationDroppableId = Number(destination.droppableId);
 
-      if (destinationDroppableId === INVITE_TO_TERRIOTY_COLUMN_ID && destColumn.items.length === MAX_INVITED_CARS_ON_LOADING) {
-        alert("Нельзя пригласить больше 2ух машин на въезд");
-        return;
+      console.log(source.droppableId)
+      console.log(typeof source.droppableId)
+
+      console.log(columns)
+
+      if (destinationDroppableId === NORTH_LOADING_COLUMN_ID) {
+        if (destColumn.items.length === MAX_CARS_ON_LOADING) {
+          alert(`На точке погрузки "${destColumn.title}" может быть только одна машина`);
+          return;
+        }
+
+        const sourceItems = [...sourceColumn.items];
+        const destItems = [...destColumn.items];
+        
+        const [movableItem] = sourceItems.splice(source.index, 1);
+        destItems.splice(destination.index, 0, movableItem);
+
+        await axios.put(`http://localhost:5000/store/load`, {
+          invoiceId: movableItem.invoiceId,
+          entrance: "Север"
+        })
+
+        setColumns({
+          ...columns,
+          [source.droppableId]: {
+            ...sourceColumn,
+            items: sourceItems,
+          },
+          [destination.droppableId]: {
+            ...destColumn,
+            items: destItems,
+          },
+        });
       }
 
-      if (destinationDroppableId === INVITE_TO_TERRIOTY_COLUMN_ID && columns[INTERNAL_PARKING_COLUMN_ID].items.length >= 2) {
-        alert(`Вы не можете пригласить машины, т.к на внутренней стоянке уже 2 машины`);
-        return;
+      if (destinationDroppableId === SOUTH_LOADING_COLUMN_ID) {
+        if (destColumn.items.length === MAX_CARS_ON_LOADING) {
+          alert(`На точке погрузки "${destColumn.title}" может быть только одна машина`);
+          return;
+        }
+
+        const sourceItems = [...sourceColumn.items];
+        const destItems = [...destColumn.items];
+        
+        const [movableItem] = sourceItems.splice(source.index, 1);
+        destItems.splice(destination.index, 0, movableItem);
+
+        await axios.put(`http://localhost:5000/store/load`, {
+          invoiceId: movableItem.invoiceId,
+          entrance: "Юг"
+        })
+
+        setColumns({
+          ...columns,
+          [source.droppableId]: {
+            ...sourceColumn,
+            items: sourceItems,
+          },
+          [destination.droppableId]: {
+            ...destColumn,
+            items: destItems,
+          },
+        });
       }
 
-      if (destinationDroppableId === INVITE_TO_TERRIOTY_COLUMN_ID
-          && columns[INVITE_TO_TERRIOTY_COLUMN_ID].items.length === 1
-          && columns[INTERNAL_PARKING_COLUMN_ID].items.length === 1) {
-        alert("Вы не можете пригласить еще одного водителя");
-        return;
+      if (sourceDroppableId === EXTERNAL_PARKING_COLUMN_ID && destinationDroppableId === INVITE_TO_TERRIOTY_COLUMN_ID) {
+        if (destColumn.items.length >= MAX_INVITED_CARS_ON_LOADING) {
+          alert("Нельзя пригласить больше 2ух машин на въезд");
+          return;
+        }
+
+        if (columns[INTERNAL_PARKING_COLUMN_ID].items.length >= 2) {
+          alert(`Вы не можете пригласить машины, т.к на внутренней стоянке уже 2 машины`);
+          return;
+        }
+
+        if (columns[INVITE_TO_TERRIOTY_COLUMN_ID].items.length >= 1 && columns[INTERNAL_PARKING_COLUMN_ID].items.length >= 1) {
+          alert("Вы не можете пригласить еще одного водителя");
+          return;
+        }
+
+        const sourceItems = [...sourceColumn.items];
+        const destItems = [...destColumn.items];
+        
+        const [movableItem] = sourceItems.splice(source.index, 1);
+        destItems.splice(destination.index, 0, movableItem);
+
+        await axios.put(`http://localhost:5000/store/invite/${movableItem.invoiceId}`)
+
+        setColumns({
+          ...columns,
+          [source.droppableId]: {
+            ...sourceColumn,
+            items: sourceItems,
+          },
+          [destination.droppableId]: {
+            ...destColumn,
+            items: destItems,
+          },
+        });
       }
 
-      if (destinationDroppableId === NORTH_LOADING_COLUMN_ID && destColumn.items.length === MAX_CARS_ON_LOADING) {
-        alert(`На точке погрузки "${destColumn.title}" может быть только одна машина`);
-        return;
-      }
+      // if (destinationDroppableId === NORTH_LOADING_COLUMN_ID && destColumn.items.length === MAX_CARS_ON_LOADING) {
+      //   alert(`На точке погрузки "${destColumn.title}" может быть только одна машина`);
+      //   return;
+      // }
 
-      if (destinationDroppableId === SOUTH_LOADING_COLUMN_ID && destColumn.items.length === MAX_CARS_ON_LOADING) {
-        alert(`На точке погрузки "${destColumn.title}" может быть только одна машина`);
-        return;
-      }
+      // if (destinationDroppableId === SOUTH_LOADING_COLUMN_ID && destColumn.items.length === MAX_CARS_ON_LOADING) {
+      //   alert(`На точке погрузки "${destColumn.title}" может быть только одна машина`);
+      //   return;
+      // }
 
-      const sourceItems = [...sourceColumn.items];
-      const destItems = [...destColumn.items];
-      const [removed] = sourceItems.splice(source.index, 1);
+      // const sourceItems = [...sourceColumn.items];
+      // const destItems = [...destColumn.items];
+      // const [removed] = sourceItems.splice(source.index, 1);
       
-      // temp assignment
-      if (removed.statusId === 2) {
-        removed.statusId = 4
-      }
+      // // temp assignment
+      // if (removed.statusId === 2) {
+      //   removed.statusId = 4
+      // }
 
-      // temp assignment
-      if (removed.statusId === 1) {
-        removed.statusId = 2;
-      }
+      // // temp assignment
+      // if (removed.statusId === 1) {
+      //   removed.statusId = 2;
+      // }
 
-      destItems.splice(destination.index, 0, removed);
-      setColumns({
-        ...columns,
-        [source.droppableId]: {
-          ...sourceColumn,
-          items: sourceItems,
-        },
-        [destination.droppableId]: {
-          ...destColumn,
-          items: destItems,
-        },
-      });
+      // destItems.splice(destination.index, 0, removed);
+      // setColumns({
+      //   ...columns,
+      //   [source.droppableId]: {
+      //     ...sourceColumn,
+      //     items: sourceItems,
+      //   },
+      //   [destination.droppableId]: {
+      //     ...destColumn,
+      //     items: destItems,
+      //   },
+      // });
     } else {
       const column = columns[source.droppableId];
       const copiedItems = [...column.items];
@@ -126,35 +212,6 @@ const Board = () => {
       },
     });
   }
-
-  // useEffect(() => {
-  //   let isMounted = true;
-
-  //   axios.get("http://localhost:5000/store/invoices").then((res) => {
-  //     let columnsCopy = cloneDeep(columnsFromBackend);
-  //     for (const [key, value] of Object.entries(columnsCopy)) {
-  //       const columnsItems = res.data.filter((x) => x.status === Number(key))
-  //       columnsCopy[key].items = columnsItems;
-  //     }
-
-  //     if (isMounted) {
-  //       setColumns(columnsCopy)
-  //     }
-  //   });
-
-  //   return () => {
-  //     isMounted = false;
-  //   }
-  // }, []);
-
-  // console.log("Kek: ", kek)
-
-  console.log("some data: ", columns)
-  console.log("is equal: ", isEqual(columns, {}))
-  console.log("is equal: ", columns === {})
-  // return (<div>Hello</div>)
-
-  // if (!columns) return <div>Loading...</div>;
 
   return (
     !isEqual(columns, {}) && (<DragDropContext
