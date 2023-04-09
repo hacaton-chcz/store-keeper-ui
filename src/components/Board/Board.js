@@ -16,7 +16,71 @@ const Board = () => {
     if (source.droppableId !== destination.droppableId) {
       const sourceColumn = columns[source.droppableId];
       const destColumn = columns[destination.droppableId];
+      const sourceDroppableId = Number(source.droppableId);
       const destinationDroppableId = Number(destination.droppableId);
+
+      if (sourceDroppableId === INTERNAL_PARKING_COLUMN_ID && destinationDroppableId === INVITE_TO_TERRIOTY_COLUMN_ID) {
+        alert("Вы не можете вернуть машину с внутренней стоянки в очередь на КПП")
+        return;
+      }
+
+      if (sourceDroppableId === NORTH_LOADING_COLUMN_ID && destinationDroppableId === INTERNAL_PARKING_COLUMN_ID) {
+        alert("Вы не можете вернуть машину с погрузки на внутреннюю стоянку")
+        return;
+      }
+
+      if (sourceDroppableId === SOUTH_LOADING_COLUMN_ID && destinationDroppableId === INTERNAL_PARKING_COLUMN_ID) {
+        alert("Вы не можете вернуть машину с погрузки на внутреннюю стоянку")
+        return;
+      }
+
+      // перетасовки
+      if (sourceDroppableId === EXTERNAL_PARKING_COLUMN_ID && destinationDroppableId === INTERNAL_PARKING_COLUMN_ID) {
+        alert("Вы не можете сделать этого")
+        return;
+      }
+
+      if (sourceDroppableId === EXTERNAL_PARKING_COLUMN_ID && destinationDroppableId === SOUTH_LOADING_COLUMN_ID) {
+        alert("Вы не можете сделать этого")
+        return;
+      }
+
+      if (sourceDroppableId === EXTERNAL_PARKING_COLUMN_ID && destinationDroppableId === NORTH_LOADING_COLUMN_ID) {
+        alert("Вы не можете сделать этого")
+        return;
+      }
+
+      if (sourceDroppableId === INVITE_TO_TERRIOTY_COLUMN_ID && destinationDroppableId === NORTH_LOADING_COLUMN_ID) {
+        alert("Вы не можете сделать этого")
+        return;
+      }
+
+      if (sourceDroppableId === INVITE_TO_TERRIOTY_COLUMN_ID && destinationDroppableId === SOUTH_LOADING_COLUMN_ID) {
+        alert("Вы не можете сделать этого")
+        return;
+      }
+
+      if (sourceDroppableId === INVITE_TO_TERRIOTY_COLUMN_ID && destinationDroppableId === EXTERNAL_PARKING_COLUMN_ID) {
+        alert("Вы не можете сделать этого")
+        return;
+      }
+
+      if (sourceDroppableId === INTERNAL_PARKING_COLUMN_ID && destinationDroppableId === EXTERNAL_PARKING_COLUMN_ID) {
+        alert("Вы не можете сделать этого")
+        return;
+      }
+
+      if (sourceDroppableId === SOUTH_LOADING_COLUMN_ID && destinationDroppableId === EXTERNAL_PARKING_COLUMN_ID) {
+        alert("Вы не можете сделать этого")
+        return;
+      }
+
+      if (sourceDroppableId === NORTH_LOADING_COLUMN_ID && destinationDroppableId === EXTERNAL_PARKING_COLUMN_ID) {
+        alert("Вы не можете сделать этого")
+        return;
+      }
+
+      // конец перетасовок
 
       if (destinationDroppableId === INVITE_TO_TERRIOTY_COLUMN_ID && destColumn.items.length === MAX_INVITED_CARS_ON_LOADING) {
         alert("Нельзя пригласить больше 2ух машин на въезд");

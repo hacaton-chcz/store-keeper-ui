@@ -8,6 +8,7 @@ const Card = ({ item, index, columnId, isCarOnLoading, onComplete }) => {
   const productionWeight = `Вес: ${item.production.size} ${item.production.unitFormat}`;
   const passDates = `Пропуск выдан: с ${item.pass.startDate} по ${item.pass.endDate}`
   const status = `Статус: ${CAR_STATUS[item.statusId]}`;
+  const passedDate = `Дата прибытия: ${item.passedDate}`;
 
   return (
     <Draggable key={item.nomenclatureId} draggableId={item.nomenclatureId.toString()} index={index}>
@@ -22,6 +23,7 @@ const Card = ({ item, index, columnId, isCarOnLoading, onComplete }) => {
             <span>{productionKind}</span>
             <span>{productionWeight}</span>
             <span>{passDates}</span>
+            <span>{passedDate}</span>
             {(item.statusId > CAR_ARRIVED && item.statusId < CAR_ON_INTERNAL_PARKING) && <span>{status}</span>}
             {isCarOnLoading && (
               <button type='button' className='card__complete' onClick={() => {

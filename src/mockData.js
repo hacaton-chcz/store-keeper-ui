@@ -1,7 +1,11 @@
 export const internalParkingData = [
+
+];
+
+export const externalParkingData = [
   {
     nomenclatureId: 500000429570,
-    carId: "B029MX/797",
+    carId: "Y550BE/774",
     production: {
       kind: "ЦИНК ЦВО ПАКЕТ",
       size: 20.5,
@@ -12,6 +16,7 @@ export const internalParkingData = [
       endDate: "2023-04-15"
     },
     statusId: 4,
+    passedDate: "2023-04-09"
   },
   {
     nomenclatureId: 500000429750,
@@ -26,80 +31,8 @@ export const internalParkingData = [
       endDate: "2023-04-15"
     },
     statusId: 4,
+    passedDate: "2023-04-09"
   },
-  // {
-  //   nomenclatureId: 500000429751,
-  //   carId: "O053HO/48",
-  //   production: {
-  //     kind: "КЛИНКЕР",
-  //     size: 30,
-  //     unitFormat: "Т",
-  //   },
-  //   pass: {
-  //     startDate: "2023-04-08",
-  //     endDate: "2023-04-15"
-  //   },
-  //   statusId: 1,
-  // },
-  // {
-  //   nomenclatureId: 500000429789,
-  //   carId: "X159KE/750",
-  //   production: {
-  //     kind: "ЦИНК ЦВО ПАКЕТ",
-  //     size: 20.5,
-  //     unitFormat: "Т",
-  //   },
-  //   pass: {
-  //     startDate: "2023-04-08",
-  //     endDate: "2023-04-15"
-  //   },
-  //   statusId: 1,
-  // },
-  // {
-  //   nomenclatureId: 500000429791,
-  //   carId: "Y060AH/774",
-  //   production: {
-  //     kind: "ЦИНК ЦВО ПАКЕТ",
-  //     size: 20.5,
-  //     unitFormat: "Т",
-  //   },
-  //   pass: {
-  //     startDate: "2023-04-08",
-  //     endDate: "2023-04-15"
-  //   },
-  //   statusId: 1,
-  // },
-  // {
-  //   nomenclatureId: 500000429792,
-  //   carId: "K294BC/196",
-  //   production: {
-  //     kind: "ЦИНК ЦВО ПАКЕТ",
-  //     size: 20.5,
-  //     unitFormat: "Т",
-  //   },
-  //   pass: {
-  //     startDate: "2023-04-08",
-  //     endDate: "2023-04-15"
-  //   },
-  //   statusId: 1,
-  // },
-  // {
-  //   nomenclatureId: 500000429794,
-  //   carId: "X329EX/797",
-  //   production: {
-  //     kind: "КЛИНКЕР",
-  //     size: 30,
-  //     unitFormat: "Т",
-  //   },
-  //   pass: {
-  //     startDate: "2023-04-08",
-  //     endDate: "2023-04-15"
-  //   },
-  //   statusId: 1,
-  // },
-];
-
-export const externalParkingData = [
   {
     nomenclatureId: 500000429795,
     carId: "Y733XK/174",
@@ -113,6 +46,7 @@ export const externalParkingData = [
       endDate: "2023-04-15"
     },
     statusId: 1,
+    passedDate: "2023-04-08"
   },
   {
     nomenclatureId: 500000429796,
@@ -127,6 +61,7 @@ export const externalParkingData = [
       endDate: "2023-04-15"
     },
     statusId: 1,
+    passedDate: "2023-04-09"
   },
   {
     nomenclatureId: 500000429797,
@@ -141,6 +76,7 @@ export const externalParkingData = [
       endDate: "2023-04-15"
     },
     statusId: 1,
+    passedDate: "2023-04-09"
   },
   {
     nomenclatureId: 500000429802,
@@ -155,6 +91,7 @@ export const externalParkingData = [
       endDate: "2023-04-15"
     },
     statusId: 1,
+    passedDate: "2023-04-08"
   },
   {
     nomenclatureId: 500000429893,
@@ -169,6 +106,7 @@ export const externalParkingData = [
       endDate: "2023-04-15"
     },
     statusId: 1,
+    passedDate: "2023-04-08"
   },
   {
     nomenclatureId: 500000429899,
@@ -183,6 +121,7 @@ export const externalParkingData = [
       endDate: "2023-04-15"
     },
     statusId: 1,
+    passedDate: "2023-04-08"
   },
   {
     nomenclatureId: 500000429900,
@@ -197,6 +136,7 @@ export const externalParkingData = [
       endDate: "2023-04-15"
     },
     statusId: 1,
+    passedDate: "2023-04-08"
   },
   {
     nomenclatureId: 500000429901,
@@ -211,6 +151,7 @@ export const externalParkingData = [
       endDate: "2023-04-15"
     },
     statusId: 1,
+    passedDate: "2023-04-08"
   },
 ]
 
