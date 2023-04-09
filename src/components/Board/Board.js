@@ -1,14 +1,41 @@
-import React, { useState } from 'react';
-import { columnsFromBackend, INTERNAL_PARKING_COLUMN_ID, INVITE_TO_TERRIOTY_COLUMN_ID, NORTH_LOADING_COLUMN_ID, EXTERNAL_PARKING_COLUMN_ID, SOUTH_LOADING_COLUMN_ID } from '../../mockData';
+import React, { useEffect, useState, useRef } from 'react';
+import { columnsFromBackend, INTERNAL_PARKING_COLUMN_ID, INVITE_TO_TERRIOTY_COLUMN_ID, NORTH_LOADING_COLUMN_ID, EXTERNAL_PARKING_COLUMN_ID, SOUTH_LOADING_COLUMN_ID } from '../../columns';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import Card from "../Card/Card";
 import "./Board.css";
+import axios from 'axios';
+import { cloneDeep, isEqual } from 'lodash';
 
 const MAX_INVITED_CARS_ON_LOADING = 2;
 const MAX_CARS_ON_LOADING = 1;
 
 const Board = () => {
-  const [columns, setColumns] = useState(columnsFromBackend);
+  const [columns, setColumns] = useState({});
+  // const [isLoading, setIsLoading] = useState(false);
+
+  async function loadData() {
+    const { data } = await axios.get("http://localhost:5000/store/invoices");
+    let columnsCopy = cloneDeep(columnsFromBackend);
+
+    for (const [key, value] of Object.entries(columnsCopy)) {
+      const columnsItems = data.filter((x) => x.status === Number(key))
+      columnsCopy[key].items = columnsItems;
+    }
+
+    return columnsCopy;
+  }
+
+  useEffect(() => {
+    // setIsLoading(true)
+    loadData().then((cols) => setColumns(cols))
+    // setIsLoading(false)
+  }, [])
+  // loadData().then((cols) => setColumns(cols))
+  // loadData()
+
+  // const [someData, setSomeData] = useState({});
+  // const componentMounted = useRef(true); // (3) component is mounted
+    // ...
 
   const onDragEnd = (result) => {
     if (!result.destination) return;
@@ -24,7 +51,7 @@ const Board = () => {
       }
 
       if (destinationDroppableId === INVITE_TO_TERRIOTY_COLUMN_ID && columns[INTERNAL_PARKING_COLUMN_ID].items.length >= 2) {
-        alert(`Вы не можете пригласить машины, т.к на внутренней стоянке уже 2 или более автомобилей`);
+        alert(`Вы не можете пригласить машины, т.к на внутренней стоянке уже 2 машины`);
         return;
       }
 
@@ -86,10 +113,10 @@ const Board = () => {
     }
   };
 
-  const onCardComplete = (columnId, nomenclatureId) => {
+  const onCardComplete = (columnId, invoiceId) => {
     const column = columns[columnId];
     const copiedItems = [...column.items];
-    const index = copiedItems.findIndex((x) => x.nomenclatureId === nomenclatureId)
+    const index = copiedItems.findIndex((x) => x.invoiceId === invoiceId)
     copiedItems.splice(index, 1);
     setColumns({
       ...columns,
@@ -100,8 +127,37 @@ const Board = () => {
     });
   }
 
+  // useEffect(() => {
+  //   let isMounted = true;
+
+  //   axios.get("http://localhost:5000/store/invoices").then((res) => {
+  //     let columnsCopy = cloneDeep(columnsFromBackend);
+  //     for (const [key, value] of Object.entries(columnsCopy)) {
+  //       const columnsItems = res.data.filter((x) => x.status === Number(key))
+  //       columnsCopy[key].items = columnsItems;
+  //     }
+
+  //     if (isMounted) {
+  //       setColumns(columnsCopy)
+  //     }
+  //   });
+
+  //   return () => {
+  //     isMounted = false;
+  //   }
+  // }, []);
+
+  // console.log("Kek: ", kek)
+
+  console.log("some data: ", columns)
+  console.log("is equal: ", isEqual(columns, {}))
+  console.log("is equal: ", columns === {})
+  // return (<div>Hello</div>)
+
+  // if (!columns) return <div>Loading...</div>;
+
   return (
-    <DragDropContext
+    !isEqual(columns, {}) && (<DragDropContext
       onDragEnd={(result) => onDragEnd(result)}
     >
       <div className='board'>
@@ -133,7 +189,7 @@ const Board = () => {
         </div>
       </div>
     </DragDropContext>
-  );
+  ));
 };
 
 function BoardColumn({columnId, column}) {
@@ -148,7 +204,7 @@ function BoardColumn({columnId, column}) {
           <span className='board-column-title'>{column.title}</span>
           {column.items.map((item, index) => (
             <Card 
-              key={item.nomenclatureId} 
+              key={item.invoiceId} 
               item={item} 
               index={index} 
               isCarOnLoading={false} 
@@ -174,7 +230,7 @@ function ExternalColumn({columnId, column, columnStyles, onComplete }) {
             <span className='board-column-external-title'>{column.title}</span>
             {column.items.map((item, index) => (
               <Card 
-                key={item.nomenclatureId}
+                key={item.invoiceId}
                 item={item} 
                 index={index}
                 columnId={columnId}
